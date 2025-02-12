@@ -1,0 +1,78 @@
+{% extends 'plantilla.html' %}
+
+{% block title %}{{ receta.nombre }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h2>{{ receta.nombre }}</h2>
+        <div class="mb-4">
+            {% if receta.imagen %}
+                <img src="{{ receta.imagen.url }}" class="img-fluid rounded" alt="{{ receta.nombre }}">
+            {% endif %}
+        </div>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Descripción</h5>
+                <p>{{ receta.descripcion }}</p>
+                <div class="d-flex justify-content-between">
+                    <span><strong>Dificultad:</strong> {{ receta.get_dificultad_display }}</span>
+                    <span><strong>Tiempo:</strong> {{ receta.tiempo_preparacion }} minutos</span>
+                    <span><strong>Origen:</strong> {{ receta.lugar_origen.nombre }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Ingredientes</h5>
+                <ul class="list-group list-group-flush">
+                    {% for ri in receta.ingredientes.all %}
+                    <li class="list-group-item">
+                        {{ ri.cantidad }} {{ ri.ingrediente.get_unidad_medida_display }} de {{ ri.ingrediente.nombre }}
+                        {% if ri.notas %}
+                            <small class="text-muted d-block">{{ ri.notas }}</small>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Pasos de Preparación</h5>
+                <div class="timeline">
+                    {% for paso in receta.pasos.all %}
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Paso {{ paso.numero_paso }}</h6>
+                            <p class="card-text">{{ paso.descripcion }}</p>
+                            {% if paso.imagen %}
+                                <img src="{{ paso.imagen.url }}" class="img-fluid rounded" alt="Paso {{ paso.numero_paso }}">
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Acciones</h5>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'Sistema:editar_receta' receta.id %}" class="btn btn-primary">Editar Receta</a>
+                    <a href="{% url 'Sistema:eliminar_receta' receta.id %}" class="btn btn-danger" 
+                       onclick="return confirm('¿Estás seguro de que deseas eliminar esta receta?')">
+                        Eliminar Receta
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

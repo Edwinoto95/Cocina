@@ -1,0 +1,71 @@
+{% extends 'plantilla.html' %}
+
+{% block title %}Recetas{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Recetas</h2>
+    <a href="{% url 'Sistema:crear_receta' %}" class="btn btn-primary">Nueva Receta</a>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Filtros</h5>
+                <form method="get">
+                    <div class="mb-3">
+                        <label class="form-label">Dificultad</label>
+                        <select name="dificultad" class="form-select">
+                            <option value="">Todas</option>
+                            <option value="facil">Fácil</option>
+                            <option value="medio">Medio</option>
+                            <option value="dificil">Difícil</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Lugar de Origen</label>
+                        <select name="origen" class="form-select">
+                            <option value="">Todos</option>
+                            {% for lugar in lugares_origen %}
+                                <option value="{{ lugar.id }}">{{ lugar.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Filtrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <div class="row">
+            {% for receta in recetas %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    {% if receta.imagen %}
+                        <img src="{{ receta.imagen.url }}" class="card-img-top" alt="{{ receta.nombre }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ receta.nombre }}</h5>
+                        <p class="card-text">{{ receta.descripcion|truncatewords:30 }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="badge bg-info">{{ receta.get_dificultad_display }}</span>
+                            <small class="text-muted">{{ receta.tiempo_preparacion }} minutos</small>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'Sistema:detalle_receta' receta.id %}" class="btn btn-primary btn-sm">Ver detalles</a>
+                        <a href="{% url 'Sistema:editar_receta' receta.id %}" class="btn btn-secondary btn-sm">Editar</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col">
+                <p>No se encontraron recetas.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

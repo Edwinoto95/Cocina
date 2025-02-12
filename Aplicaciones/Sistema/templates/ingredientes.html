@@ -1,0 +1,71 @@
+{% extends 'plantilla.html' %}
+
+{% block title %}Ingredientes{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Ingredientes</h2>
+    <a href="{% url 'Sistema:crear_ingrediente' %}" class="btn btn-primary">Nuevo Ingrediente</a>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="tabla-ingredientes" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Unidad de Medida</th>
+                                <th>Descripción</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ingrediente in ingredientes %}
+                            <tr>
+                                <td>{{ ingrediente.nombre }}</td>
+                                <td>{{ ingrediente.get_unidad_medida_display }}</td>
+                                <td>{{ ingrediente.descripcion|truncatewords:30 }}</td>
+                                <td>
+                                    <a href="{% url 'Sistema:editar_ingrediente' ingrediente.id %}" 
+                                       class="btn btn-sm btn-secondary">
+                                        Editar
+                                    </a>
+                                    <a href="{% url 'Sistema:eliminar_ingrediente' ingrediente.id %}" 
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('¿Estás seguro de que deseas eliminar este ingrediente?')">
+                                        Eliminar
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">No hay ingredientes registrados.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DataTables JS y CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#tabla-ingredientes').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+            }
+        });
+    });
+</script>
+
+{% endblock %}

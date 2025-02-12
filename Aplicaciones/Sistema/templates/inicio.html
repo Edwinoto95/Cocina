@@ -1,0 +1,150 @@
+{% extends 'plantilla.html' %}
+
+{% block title %}Inicio - Gestión de Recetas{% endblock %}
+
+{% block content %}
+<!-- Estilos embebidos -->
+<style>
+    /* Fuente moderna y legible */
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Estilo del botón hover */
+    a.hover-text-primary:hover {
+        color: #0066cc;
+        text-decoration: underline;
+    }
+
+    /* Fondo de la sección de bienvenida con un gradiente atractivo */
+    .jumbotron.bg-gradient-to-r {
+        background: linear-gradient(135deg, #6a0dad, #4a90e2);
+    }
+
+    /* Sombra y bordes redondeados para tarjetas */
+    .card {
+        border-radius: 15px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Estilo de texto principal con negrita y tamaño adecuado */
+    h1, h5 {
+        font-weight: 600;
+    }
+
+    /* Estilos para títulos dentro de las tarjetas */
+    .card-title {
+        font-size: 1.25rem;
+    }
+
+    /* Para mejorar la alineación y espaciado */
+    .container.text-center {
+        max-width: 80%;
+        margin: auto;
+    }
+
+    /* Mejorar espaciado entre los items */
+    ul.list-unstyled li {
+        margin-bottom: 15px;
+    }
+
+    /* Diseño de botones con efectos hover */
+    .btn-primary {
+        background-color: #0066cc;
+        border-color: #0066cc;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #005bb5;
+        border-color: #005bb5;
+    }
+
+    /* Mejorar la apariencia del texto en el hero */
+    .display-4 {
+        font-size: 3rem;
+        font-weight: 700;
+    }
+
+    /* Estilo de la tarjeta */
+    .card-body {
+        padding: 20px;
+    }
+</style>
+
+<!-- Hero Section (Banner) -->
+<div class="jumbotron jumbotron-fluid bg-gradient-to-r from-purple-600 to-blue-500 text-white mb-4 py-5">
+    <div class="container text-center">
+        <h1 class="display-4 font-weight-bold">Bienvenido a la Gestión de Recetas</h1>
+        <p class="lead">Descubre y gestiona recetas de todo el mundo de forma sencilla y deliciosa.</p>
+        <hr class="my-4 bg-white w-50 mx-auto">
+        <p class="mb-0">¡Empieza a explorar recetas innovadoras hoy mismo!</p>
+    </div>
+</div>
+
+<!-- Main Content Section -->
+<div class="row g-4">
+    <!-- Últimas Recetas -->
+    <div class="col-md-4">
+        <div class="card shadow-lg border-0 rounded-3">
+            <div class="card-body">
+                <h5 class="card-title text-center text-primary fw-bold">Últimas Recetas</h5>
+                {% if ultimas_recetas %}
+                    <ul class="list-unstyled">
+                    {% for receta in ultimas_recetas %}
+                        <li class="mb-2">
+                            <a href="{% url 'Sistema:detalle_receta' receta.id %}" class="text-decoration-none text-dark fw-medium hover-text-primary">
+                                <strong>{{ receta.nombre }}</strong>
+                            </a>
+                            <small class="text-muted d-block">{{ receta.lugar_origen.nombre }}</small>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted">No hay recetas disponibles.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recetas por Dificultad -->
+    <div class="col-md-4">
+        <div class="card shadow-lg border-0 rounded-3">
+            <div class="card-body">
+                <h5 class="card-title text-center text-primary fw-bold">Recetas por Dificultad</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'Sistema:recetas_por_dificultad' 'facil' %}" class="text-decoration-none">Fácil</a></li>
+                    <li><a href="{% url 'Sistema:recetas_por_dificultad' 'medio' %}" class="text-decoration-none">Medio</a></li>
+                    <li><a href="{% url 'Sistema:recetas_por_dificultad' 'dificil' %}" class="text-decoration-none">Difícil</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lugares de Origen -->
+    <div class="col-md-4">
+        <div class="card shadow-lg border-0 rounded-3">
+            <div class="card-body">
+                <h5 class="card-title text-center text-primary fw-bold">Lugares de Origen</h5>
+                {% if lugares_origen %}
+                    <ul class="list-unstyled">
+                    {% for lugar in lugares_origen %}
+                        <li>
+                            <a href="{% url 'Sistema:recetas_por_origen' lugar.id %}" class="text-decoration-none text-dark hover-text-primary">{{ lugar.nombre }}</a>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted">No hay lugares de origen registrados.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

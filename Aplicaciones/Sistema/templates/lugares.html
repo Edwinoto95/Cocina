@@ -1,0 +1,71 @@
+{% extends 'plantilla.html' %}
+
+{% block title %}Lugares de Origen{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Lugares de Origen</h2>
+    <a href="{% url 'Sistema:crear_lugar' %}" class="btn btn-primary">Nuevo Lugar de Origen</a>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="tabla-lugares" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Recetas Asociadas</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for lugar in lugares %}
+                            <tr>
+                                <td>{{ lugar.nombre }}</td>
+                                <td>{{ lugar.descripcion|truncatewords:30 }}</td>
+                                <td>{{ lugar.receta_set.count }}</td>
+                                <td>
+                                    <a href="{% url 'Sistema:editar_lugar' lugar.id %}" 
+                                       class="btn btn-sm btn-secondary">
+                                        Editar
+                                    </a>
+                                    <a href="{% url 'Sistema:eliminar_lugar' lugar.id %}" 
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('¿Estás seguro de que deseas eliminar este lugar de origen? Esto podría afectar a las recetas asociadas.')">
+                                        Eliminar
+                                    </a>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">No hay lugares de origen registrados.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DataTables JS y CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#tabla-lugares').DataTable({
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.13.4/i18n/es-ES.json"
+            }
+        });
+    });
+</script>
+
+{% endblock %}
